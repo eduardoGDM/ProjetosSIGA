@@ -1,0 +1,43 @@
+/* styles/custom-fonts.css */
+
+@font-face {
+    font-family: 'Nunito Sans';
+    src: url('/fonts/NunitoSans_7pt-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Nunito Sans';
+    src: url('/fonts/NunitoSans_7pt-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Nunito Sans';
+    src: url('/fonts/NunitoSans_7pt-Light.ttf') format('truetype');
+    font-weight: lighter;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Nunito Sans';
+    src: url('/fonts/NunitoSans_7pt-LightItalic.ttf') format('truetype');
+    font-weight: lighter;
+    font-style: italic;
+  }
+  
+  @font-face {
+    font-family: 'Nunito Sans';
+    src: url('/fonts/NunitoSans_7pt-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+.text-custom-font {
+    font-family: 'Nunito Sans', sans-serif;
+  }
+  
+  
