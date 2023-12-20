@@ -1,7 +1,9 @@
 import {
   Add,
   DeleteForever,
+  GroupAdd,
   ModeEdit,
+  PictureAsPdf,
   SaveAs
 } from "@mui/icons-material";
 import Box from "@mui/material/Box";
@@ -25,9 +27,9 @@ function ModalRelatorio({ isOpen, onClose }) {
             </div>
         <div className="">
           
-          <Box sx={{ width: 350 }}>
+          <Box sx={{ width: 380 }}>
          
-            <h2 className="text-2xl text-[#D9D9D9] text-center font-extrabold" id="parent-modal-title">
+            <h2 className="text-1xl text-[#D9D9D9] text-center font-extrabold " id="parent-modal-title">
               Essa pagina é direcionada a criação de relatório acompanhado da
               emissão do PDF
             </h2>
@@ -35,35 +37,46 @@ function ModalRelatorio({ isOpen, onClose }) {
               Preencha todos os campos referentes a sua documentação desejada.
             </p>
             <p className="text-[#101010]" id="parent-modal-description">
-              Após preencher todos os campos,será possivel adicionar esses dados
+              Após preencher todos os campos, será possivel adicionar esses dados
               a um conjunto de tópicos.
             </p>
             <p className="text-[#101010]" id="parent-modal-description">
               Utilizando o botão:
             </p>
-            <Button color="primary" variant="text" startIcon={<Add />}>
+            <div className="flex justify-center">
+            <Button id="button-alert" color="primary" variant="text" startIcon={<Add />}>
               {" "}
               Adicionar{" "}
             </Button>
+
+            </div>
             <p className="text-[#101010]" id="parent-modal-description">
               Será possivel editar o tópico ja salvo no tópico.Através do botão:
             </p>
+            <div className="flex justify-center">
             <Button variant="text" startIcon={<ModeEdit />} color="secondary">
               Editar{" "}
             </Button>
+
+            </div>
+
             <p className=" py-[2%] text-xs text-[#101010]">
               obs:Não é possivel salvar com campos em branco.
             </p>
             <p className="py-[2%]  text-[#101010]">
-              Após realizar a edição,é possivel salvar novamente o tópico ao
+              Após realizar a edição, é possivel salvar novamente o tópico ao
               conjunto.Através do botão:
             </p>
+            <div className="flex justify-center">
             <Button startIcon={<Add />} variant="text" color="primary">
               Concluir
             </Button>
+
+            </div>
             <p className="py-[2%]  text-[#101010]">
               É possivel excluir o tópico do conjunto através do botão:
             </p>
+            <div className="flex justify-center">
             <Button
               className="pl-[3%]"
               startIcon={<DeleteForever />}
@@ -72,13 +85,42 @@ function ModalRelatorio({ isOpen, onClose }) {
             >
               Excluir
             </Button>
+
+            </div>
             <p className="py-[2%]  text-[#101010]">
-              Após concluir é possivel salvar seu conjunto de tópicos através do
+              Após concluir, é possivel salvar seu conjunto de tópicos através do
               botão:
             </p>
+            <div className="flex justify-center">
             <Button color="success" variant="text" startIcon={<SaveAs />}>
               Salvar Relatorio
             </Button>
+
+            </div>
+            <p>É possivel selecionar através da tabela ao lado, um aluno para formar seu cabeçalho a partir de seus dados, pressionando o botão:</p>
+            <div className="flex justify-center">
+
+            <Button
+                          className=""
+                          startIcon={<GroupAdd/>}
+                          variant="text"
+                          color="primary"
+                        >
+                          Cabeçalho
+                        </Button>
+            </div>
+
+                        <p>Após selecionar um aluno, será disponibilizado a emissão do seu documento em formato PDF, através do botão:</p>
+                        <div className="flex justify-center">
+                        <Button
+                          color="error"
+                          variant="text"
+                          startIcon={<PictureAsPdf />}
+                        >
+                          Emitir PDF
+                        </Button>
+
+                        </div>
           </Box>
         </div>
       </div>

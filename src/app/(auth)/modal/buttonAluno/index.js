@@ -30,24 +30,31 @@ function ModalALuno({ isOpen, onClose }) {
             <p className="text-[#101010]">
               *Preencha todos os campos e por fim pressione o botão.
             </p>
+            <div className="flex justify-center">
             <Button color="success" variant="text" startIcon={<SaveAs />}>
               {" "}
               Salvar Cadastro{" "}
             </Button>
+
+            </div>
             <p className=" text-[#101010]">
-              obs:Não é possivel salvar com campos em branco.
+              obs: Não é possivel salvar com campos em branco.
             </p>
             <p className="  text-[#101010]">
               Após cadastrar um aluno é possivel visualizar seus dados na tabela
-              abaixo,além de possibilitar a edição desses dados através do
+              abaixo, além de possibilitar a edição desses dados através do
               botão:
             </p>
-            <Button startIcon={<EditNote />} variant="text" color="primary">
+            <div className="flex justify-center">
+            <Button id="login-button" startIcon={<EditNote />} variant="text" color="primary">
               Editar
             </Button>
+            </div>
             <p className="  text-[#101010]">
               E excluir através do botão:
             </p>
+
+            <div className="flex justify-center">
             <Button
               className="pl-[3%]"
               startIcon={<DeleteForever />}
@@ -56,6 +63,8 @@ function ModalALuno({ isOpen, onClose }) {
             >
               Excluir
             </Button>
+
+            </div>
           </Box>
       </div>
       <div className="flex justify-center">

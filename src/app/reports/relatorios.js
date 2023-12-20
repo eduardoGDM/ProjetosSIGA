@@ -1,82 +1,29 @@
-import pdfMake from 'pdfmake/build/pdfMake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'row',
+    backgroundColor: '#E4E4E4',
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1,
+  },
+});
 
-function relatoriosPDF(alunos){
-    pdfMake.vfs = pdfFonts.pdfMake.vfs
-    const reportTitle = [
-        {
-            text:'Relatórios',
-            fontSize:15,
-            bold:true,
-            margin:[15,20,0,45],
-            font: 'Roboto'
-        }
-    ]
-    
-       
-
-
-
-    // const dataAlunos = alunos.map((aluno) => {
-    //     return[
-    //             {text:aluno.idade,fontSize:9,margin:[0,2,0,2]},
-    //             {text:aluno.nome,fontSize:9,margin:[0,2,0,2]},
-    //     ]
-    // } )
-    const dataRela = alunos.map((aluno) => {
-        return[
-                {text:aluno.nome,fontSize:9,margin:[0,2,0,2]},
-                {text:aluno.idade,fontSize:9,margin:[0,2,0,2]},
-        ]
-    } )
-
+const MyDoc = ({ selectedAluno }) => {
+    const alunosArray = Array.isArray(selectedAluno) ? selectedAluno : [];
   
+    return (
+      <Document>
+      <Page  size="A4" style={styles.page}>
+        <View style={styles.section}>
+          <Text>{`Aluno: `}</Text>
+        </View>
+      </Page>
+    </Document>
+  );
+};
 
-
-
-
-    const details =[
-{
-    table:{
-        headerRows:1,
-        widths:['*','*','*','*'],
-        body:[
-            [
-                {text:'Titulo',style:'tableHeader',fontSize:10},
-                {text:'Topico',style:'tableHeader',fontSize:10},
-            ],
-            ...dataRela,
-            // ...dataAlunos
-            
-        ]
-    },
-    layout:'headerLineOnly'
-}
-
-    ]
-
-
-   function Rodape(currentPage,pageCount){
-    return[
-        {
-            text:currentPage + '/' + pageCount,
-            alignment:'right',
-            fontSize:9,
-            bold:true,
-            margin:[0,10,20,0]
-        }
-    ]
-   }
-   const docDefinition = {
-    pageSize: 'A4',
-    pageMargins: [15, 50, 15, 40],
-    header: [reportTitle],
-    content: [details],
-    footer: Rodape,
-
-  };
-    pdfMake.createPdf(docDefinition).download()
-}
-
-export default relatoriosPDF
+export default MyDoc;

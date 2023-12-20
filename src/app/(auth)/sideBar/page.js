@@ -7,7 +7,7 @@ export default function sideBar() {
 		{ title: "Dashboard", src: "quadradino", link: "/general" },
 		{ title: "Cadastro de Alunos", src: "chapeuzinho", link: "/cadastroAluno" },
 		{ title: "Criação de Relatórios", src: "docs", link: "/cadastroRelatorios" },
-		{ title: "Lista de Relatórios", src: "docs", link: "/listaRelatorios" },
+		{ title: "Lista de Relatórios", src: "list-svgrepo-com", link: "/listaRelatorios" },
 	];
 
 	const [page, setPage] = useState("general");

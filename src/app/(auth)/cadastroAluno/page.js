@@ -180,6 +180,7 @@ export default function CadastroAluno() {
     });
   };
 
+  
   useEffect(() => {
     const getAlunos = async () => {
       const data = await getDocs(alunosCollectionRef);
@@ -456,7 +457,7 @@ export default function CadastroAluno() {
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
             >
-              Next
+              Próximo
             </Button>
           </div>
           </div>

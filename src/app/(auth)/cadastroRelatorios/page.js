@@ -1,6 +1,7 @@
 "use client";
 
 import ModalRelatorio from "@/app/(auth)/modal/buttonRelatorio";
+import { default as MyDoc } from "@/app/reports/relatorios";
 import { db } from "@/services/firebaseConfig";
 import {
   Add,
@@ -12,7 +13,8 @@ import {
   SaveAs,
 } from "@mui/icons-material";
 import { Button, TextareaAutosize } from "@mui/material";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import { collection, getDocs } from "firebase/firestore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { MagicMotion } from "react-magic-motion";
@@ -27,14 +29,21 @@ function App() {
   const [editingIndex, setEditingIndex] = useState(null);
   const alunosCollectionRef = collection(db, "aluno");
   const [alunos, setAlunos] = useState([]);
-  const [selectedAluno, setSelectedAluno] = useState(null);
+  const [selectedAluno, setSelectedAluno] = useState([]);
   const [filter, setFilter] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenTwo, setIsModalOpenTwo] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3; // You can adjust this based on your preference
 
 
+  const openModalTwo = () => {
+    setIsModalOpen(true);
+  };
 
+  const closeModalTwo = () => {
+    setIsModalOpen(false);
+  };
 
 
   const openModal = () => {
@@ -102,24 +111,32 @@ function App() {
 
   const saveRelatorios = async () => {
     try {
-      const relatoriosRef = collection(db, "aluno");
-      const newDocumentRef = doc(relatoriosRef, "g2onPwzJaWEZrl0Fznue");
-      const relatoriosObject = { relatorios };
-      await setDoc(newDocumentRef, relatoriosObject);
+      if (!selectedAluno) {
+        console.error("Nenhum aluno selecionado.");
+        return;
+      }
+  
+      const alunoId = selectedAluno.id;
+  
+      const relatoriosRef = collection(db, "aluno", alunoId, "relatorios");
+  
 
+      const relatorioData = { relatorios };
+  
+      console.log("Dados do relatório a serem salvos:", relatorioData);
+      
+  
+      await addDoc(relatoriosRef, relatorioData);
+  
       Swal.fire({
-        title: `Salvo com sucesso!: `,
+        title: "Salvo com sucesso!",
         text: "Relatório foi salvo!",
         icon: "success",
-        showConfirmButton: false,
-        timer: 1000
       });
     } catch (error) {
       console.error("Erro ao salvar dados: ", error);
     }
   };
-
-  console.log(relatorios);
 
   useEffect(() => {
     const getAlunos = async () => {
@@ -128,6 +145,20 @@ function App() {
     };
 
     getAlunos();
+  }, []);
+
+     useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      const message = 'Você tem certeza que deseja sair? Se você sair, pode perder o progresso.';
+      event.returnValue = message; // Standard for most browsers
+      return message; // For some older browsers
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   const filterAlunos = (alunos, filter) => {
@@ -156,7 +187,6 @@ function App() {
     const endIndex = startIndex + itemsPerPage;
     
 
-  console.log(selectedAluno);
   return (
     <MagicMotion>
       <div className="h-screen flex">
@@ -231,7 +261,21 @@ function App() {
               Salvar Relatorio
             </Button>
             <div>
-              <div></div>
+             <div>  
+             <PDFDownloadLink document={<MyDoc selectedAluno={selectedAluno} />} fileName="somename.pdf">
+      {({ blob, url, loading, error }) => (
+        <Button
+          disabled={selectedAluno === null}
+          color="error"
+          variant="text"
+          startIcon={<PictureAsPdf />}
+          onClick={(e) => console.log('Emitindo PDF')}
+        >
+          Emitir PDF
+        </Button>
+      )}
+    </PDFDownloadLink>
+    </div>
             </div>
 
             {/* <div className="ml-[2%]">
@@ -316,14 +360,12 @@ function App() {
           </div>
         </div>
         <div className="ml-[60%] fixed my-[3%]">
+        <h1 className="font-extrabold text-[#251B45] text-2xl ">Selecione aluno para emissão do PDF:</h1>
+
           <div>
             <div className="relative flex-col">
-              <div className="my-[1%] ">
-                <div>
-                  <h1 className="font-extrabold text-[#251B45] text-1xl">
-                    Selecione o aluno destinado ao Relatório
-                  </h1>
-                </div>
+              <div className="my-[1%]">
+                
                 <input
                   type="text"
                   placeholder="Pesquisar aluno..."
@@ -374,17 +416,9 @@ function App() {
                         >
                           Cabeçalho
                         </Button>
-                        <Button
-                          disabled={selectedAluno === null}
-                          color="error"
-                          variant="text"
-                          startIcon={<PictureAsPdf />}
-                          onClick={(e) => relatoriosPDF(relatorios)}
-                        >
-                          Emitir PDF
-                        </Button>
+                        
+            
                       </div>
-                      <div></div>
                     </div>
                   </tr>
                 );
@@ -410,6 +444,7 @@ function App() {
               Próximo
             </Button>
           </div>
+         
         </div>
       </div>
     </MagicMotion>
