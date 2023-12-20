@@ -15,8 +15,8 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ReactInputMask from "react-input-mask";
+import ModalALuno from "../modal/buttonAluno";
 import search from "/public/search.svg";
-import ModalRelatorio from "../modal/buttonRelatorio";
 const Swal = require("sweetalert2");
 
 export default function CadastroAluno() {
@@ -38,6 +38,8 @@ export default function CadastroAluno() {
   const [alunos, setAlunos] = useState([]);
   const alunosCollectionRef = collection(db, "aluno");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // You can adjust this based on your preference
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -67,6 +69,8 @@ export default function CadastroAluno() {
       title: "Sucesso!!!",
       text: "Aluno Cadastrado",
       icon: "success",
+      showConfirmButton: false,
+      timer: 1000
     });
     setNewNome("");
     setNewIdade("");
@@ -124,6 +128,8 @@ export default function CadastroAluno() {
           title: "Sucesso!!!",
           text: "Aluno Atualizado",
           icon: "success",
+          showConfirmButton: false,
+          timer: 1000
         });
 
         cancelEdit();
@@ -169,6 +175,7 @@ export default function CadastroAluno() {
         }, 1000);
       } else if (result.isDenied) {
         Swal.fire("Nada alterado", "", "info");
+       
       }
     });
   };
@@ -186,11 +193,27 @@ export default function CadastroAluno() {
     if (!filter) {
       return alunos;
     }
-    return alunos.filter((aluno) =>
-      aluno.nome.toLowerCase().includes(filter.toLowerCase())
-    );
+
+    return alunos.filter((aluno) => {
+      // Verificar se aluno e aluno.nome são definidos
+      if (aluno && aluno.nome) {
+        return aluno.nome.toLowerCase().includes(filter.toLowerCase());
+      }
+
+      return false; // Se aluno ou aluno.nome não estiverem definidos, não incluir no filtro
+    });
   };
 
+  const totalPages = Math.ceil(filterAlunos(alunos, filter).length / itemsPerPage);
+
+
+    const handlePageChange = (newPage) => {
+      setCurrentPage(newPage);
+    };
+  
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    
   console.log(alunos);
 
   return (
@@ -204,7 +227,7 @@ export default function CadastroAluno() {
               </h1>
               <div className="flex mt-2">
                 <Button endIcon={<Help />} onClick={openModal}></Button>
-                <ModalRelatorio isOpen={isModalOpen} onClose={closeModal} />
+                <ModalALuno isOpen={isModalOpen} onClose={closeModal} />
               </div>
             </div>
 
@@ -367,7 +390,9 @@ export default function CadastroAluno() {
                 </tr>
               </thead>
               <tbody>
-                {filterAlunos(alunos, filter).map((aluno, index) => {
+              {filterAlunos(alunos, filter)
+                .slice(startIndex, endIndex)
+                .map((aluno, index) => {
                   return (
                     <tr key={aluno.matricula}>
                       <td className="border pl-2 py-2 pr-10 font-bold">
@@ -415,6 +440,25 @@ export default function CadastroAluno() {
                 })}
               </tbody>
             </table>
+            <div className="pagination">
+            <Button
+               variant="text"
+               color="primary"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Anterior
+            </Button>
+            <span className="text-[#251B45] font-bold">{currentPage}</span>
+            <Button
+             variant="text"
+             color="primary"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
           </div>
         </div>
 

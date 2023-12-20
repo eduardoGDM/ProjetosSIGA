@@ -1,26 +1,12 @@
-import React, { useState } from "react";
 import {
   Add,
   DeleteForever,
-  Edit,
-  EditNote,
-  Help,
   ModeEdit,
-  SaveAs,
+  SaveAs
 } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
 
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import {
-  Auth,
-  AuthError,
-  createUserWithEmailAndPassword as firebaseCreateUserWithEmailAndPassword,
-  sendEmailVerification,
-  UserCredential,
-} from "firebase/auth";
-import { auth } from "@/services/firebaseConfig";
 import "./styles.css";
 
 function ModalRelatorio({ isOpen, onClose }) {
@@ -29,20 +15,22 @@ function ModalRelatorio({ isOpen, onClose }) {
   return (
     <div className="modal">
       <div className="modal-content">
-        <div className="">
-          <Box sx={{ width: 350 }}>
-            <div className="flex justify-center">
-              <button
-                className="bg-[#0CCA98] text-white font-bold py-2 px-4 rounded flex items-center login-button"
+      <div className="flex justify-end">
+            <button
+                className="hover:bg-[#0CCA98] text-zinc-500  font-bold px-[0.5%] rounded right-7 login-button"
                 onClick={onClose}
               >
                 X
               </button>
             </div>
-            <p className="text-2xl text-[#101010]" id="parent-modal-title">
+        <div className="">
+          
+          <Box sx={{ width: 350 }}>
+         
+            <h2 className="text-2xl text-[#D9D9D9] text-center font-extrabold" id="parent-modal-title">
               Essa pagina é direcionada a criação de relatório acompanhado da
               emissão do PDF
-            </p>
+            </h2>
             <p className="text-[#101010] py-[1%]" id="parent-modal-description">
               Preencha todos os campos referentes a sua documentação desejada.
             </p>
@@ -74,7 +62,7 @@ function ModalRelatorio({ isOpen, onClose }) {
               Concluir
             </Button>
             <p className="py-[2%]  text-[#101010]">
-              É possivel excluir através do botão:
+              É possivel excluir o tópico do conjunto através do botão:
             </p>
             <Button
               className="pl-[3%]"

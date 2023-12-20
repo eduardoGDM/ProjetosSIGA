@@ -1,6 +1,6 @@
 "use client";
 
-import ButtonRelatorio from "@/app/(auth)/modal/buttonRelatorio";
+import ModalRelatorio from "@/app/(auth)/modal/buttonRelatorio";
 import { db } from "@/services/firebaseConfig";
 import {
   Add,
@@ -18,8 +18,6 @@ import { useEffect, useState } from "react";
 import { MagicMotion } from "react-magic-motion";
 import Swal from "sweetalert2";
 import search from "/public/search.svg";
-import ModalLogin from "@/app/(auth)/modal/buttonRelatorio";
-import ModalRelatorio from "@/app/(auth)/modal/buttonRelatorio";
 
 function App() {
   const [relatorios, setRelatorios] = useState([]);
@@ -32,6 +30,12 @@ function App() {
   const [selectedAluno, setSelectedAluno] = useState(null);
   const [filter, setFilter] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3; // You can adjust this based on your preference
+
+
+
+
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -42,8 +46,10 @@ function App() {
   };
   function handleSelectAluno(aluno) {
     Swal.fire({
-      title: "Aluno selecionado com sucesso!",
+      title: `Aluno: ${aluno.nome} Selecionado com sucesso`,
       icon: "success",
+      showConfirmButton: false,
+      timer: 1000
     });
 
     setSelectedAluno(aluno);
@@ -71,10 +77,28 @@ function App() {
   };
 
   const handleDelete = (index) => {
-    const newArray = [...relatorios];
-    newArray.splice(index, 1);
-    setRelatorios(newArray);
+    Swal.fire({
+      title: "Você realmente quer excluir esses dados?",
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: "Excluir",
+      denyButtonText: `Cancelar`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        const newArray = [...relatorios];
+        newArray.splice(index, 1);
+        setRelatorios(newArray);
+        Swal.fire("Dados Excluidos!", "", "success");
+      } else if (result.isDenied) {
+        Swal.fire("Nada alterado", "", "info");
+       
+      }
+    });
   };
+    
+   
+  
 
   const saveRelatorios = async () => {
     try {
@@ -84,9 +108,11 @@ function App() {
       await setDoc(newDocumentRef, relatoriosObject);
 
       Swal.fire({
-        title: "Salvo com sucesso!",
+        title: `Salvo com sucesso!: `,
         text: "Relatório foi salvo!",
         icon: "success",
+        showConfirmButton: false,
+        timer: 1000
       });
     } catch (error) {
       console.error("Erro ao salvar dados: ", error);
@@ -118,6 +144,17 @@ function App() {
       return false; // Se aluno ou aluno.nome não estiverem definidos, não incluir no filtro
     });
   };
+
+  const totalPages = Math.ceil(filterAlunos(alunos, filter).length / itemsPerPage);
+
+
+    const handlePageChange = (newPage) => {
+      setCurrentPage(newPage);
+    };
+  
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    
 
   console.log(selectedAluno);
   return (
@@ -221,19 +258,26 @@ function App() {
       </div>
       </div> */}
             <div>
-              <div></div>
+        
             </div>
           </div>
 
-          <div></div>
+          
           <div>
             <div className="ml-[2%]">
-              <span className="font-extrabold text-[#251B45] text-3xl ">
-                {" "}
+              <div className="flex flex-col">
+              <h1 className="font-extrabold text-[#251B45] text-2xl ">
+                {selectedAluno !== null
+                  ? `Aluno selecionado: ${selectedAluno.nome}`
+                  : "Não há aluno Selecionado!"}
+              </h1>
+              <h1 className="font-extrabold text-[#251B45] text-2xl ">
                 {relatorios[0] !== relatorios[1]
                   ? "Topicos salvos listados:"
                   : "Não há topicos salvos!"}
-              </span>
+                  
+              </h1>
+              </div>
             </div>
             <div className=" flex flex-wrap px-[2%]">
               {relatorios.map((relatorio, index) => (
@@ -307,7 +351,9 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {filterAlunos(alunos, filter).map((aluno, index) => {
+             {filterAlunos(alunos, filter)
+                .slice(startIndex, endIndex)
+                .map((aluno, index) => {
                 return (
                   <tr key={aluno.matricula}>
                     <td className="border pl-2 py-2 pr-10 font-bold">
@@ -345,7 +391,25 @@ function App() {
               })}
             </tbody>
           </table>
-          <div></div>
+          <div className="pagination">
+            <Button
+               variant="text"
+               color="primary"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Anterior
+            </Button>
+            <span className="text-[#251B45] font-bold">{currentPage}</span>
+            <Button
+             variant="text"
+             color="primary"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Próximo
+            </Button>
+          </div>
         </div>
       </div>
     </MagicMotion>

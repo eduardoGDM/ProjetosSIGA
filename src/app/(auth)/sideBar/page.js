@@ -8,7 +8,6 @@ export default function sideBar() {
 		{ title: "Cadastro de Alunos", src: "chapeuzinho", link: "/cadastroAluno" },
 		{ title: "Criação de Relatórios", src: "docs", link: "/cadastroRelatorios" },
 		{ title: "Lista de Relatórios", src: "docs", link: "/listaRelatorios" },
-		{ title: "FAQ", src: "question", link: "faq" },
 	];
 
 	const [page, setPage] = useState("general");
@@ -36,12 +35,12 @@ export default function sideBar() {
 						/>
 					</Link>
 					<div className="flex gap-x-4 items-center"></div>
-					<ul className="pt-6">
+					<ul className="pt-20">
 						{Menu.map((menu, index) => (
 							<a
 								href={menu.link}
 								key={index}
-								className="text-sm flex items-center gap-x-2 cursor-pointer py-[6%] px-[10%] rounded-xl hover:bg-[#0CCA98] ">
+								className="text-sm flex items-center gap-x-2 cursor-pointer py-[15%] px-[10%] rounded-xl hover:bg-[#0CCA98] ">
 								<img className="px-2 py-2  text-white" src={`/${menu.src}.svg`} />
 								<span className={`${!open && "hidden"} text-white`}>
 									{menu.user}
